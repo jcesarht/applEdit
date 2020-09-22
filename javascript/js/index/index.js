@@ -71,8 +71,10 @@ function buscarOverPrice(){
   if(flag_overprice == 0){
     flag_overprice = 1;
     while(check){
-      if($("#precio_max_"+cont).length){
-        if($("#precio_"+cont).val() < $("#precio_competencia_"+cont).val()){
+      $precio_publicado = parseFloat($("#precio_"+cont).val());
+      $precio_competencia =  parseFloat($("#precio_competencia_"+cont).val());
+      if($("#precio_"+cont).length){
+        if( $precio_publicado < $precio_competencia){
           tr = document.getElementById("tr_"+cont);
           tr.style.display='none';
         }
@@ -84,7 +86,7 @@ function buscarOverPrice(){
   }else{
     flag_overprice = 0;
     while(check){
-      if($("#precio_max_"+cont).length){
+      if($("#precio_"+cont).length){
         tr = document.getElementById("tr_"+cont);
         tr.style.display='';
         cont++;
