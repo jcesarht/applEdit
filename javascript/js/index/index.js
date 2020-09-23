@@ -38,7 +38,6 @@ function consultarCambioPrecios(){
             div_alerta.setAttribute('role','');
           },
           success: function (response) {
-            console.log(response);
             var consulta = jQuery.parseJSON(response);
             var icono_alerta = '';
             var tipo_msg = '';
@@ -100,7 +99,7 @@ function actualizar(id_element){
   if(confirm('¿Desea actualizar este producto?')){
     var url = pathName + 'javascript/jquery/modelos/index/actualizar_cambios_precios.php'; 
     var input = document.getElementById("precio_"+id_element);
-    var precio_competencia = document.getElementById("precio_anterior_"+id_element);
+    var precio_competencia = document.getElementById("precio_competencia_"+id_element);
     var id_product_woo = document.getElementById('woo_'+id_element);
     var id_product = document.getElementById('id_product_'+id_element);
     var param = {
@@ -172,7 +171,6 @@ function consultarProductosNuevos(){
             div_alerta.setAttribute('role','');
           },
           success: function (response) {
-            console.log(response);
             var consulta = jQuery.parseJSON(response);
             var icono_alerta = '';
             var tipo_msg = '';
@@ -217,7 +215,6 @@ function descartarN(id_element){
               tr.innerHTML = '<td colspan="5"><center><img src="'+pathName+'img/big_loading.gif" alt="Cargando..." width="50px"></center></td>';
             },
             success: function (response) {
-              console.log(response);
               var consulta = jQuery.parseJSON(response);
               tr.innerHTML = '<td colspan="5"><center>'+consulta.msg+'</center></td>'; 
             }
@@ -249,7 +246,6 @@ function insertar(id_element){
               tr.innerHTML = '<td colspan="5"><center><img src="'+pathName+'img/big_loading.gif" alt="Cargando..." width="50px"></center></td>';
             },
             success: function (response) {
-              console.log(response);
               var consulta = jQuery.parseJSON(response);
               tr.innerHTML = '<td colspan="5"><center>'+consulta.msg+'</center></td>'; 
             }

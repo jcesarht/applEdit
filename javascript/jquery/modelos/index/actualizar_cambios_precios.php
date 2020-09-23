@@ -1,40 +1,38 @@
 <?php
-require_once('../../../../../receptionProduct/src/archivos.php');
-require_once('../../../../../receptionProduct/src/connectwoo.php');
-$archivo = new ArchivoTm();
-$cw = new Connectwoo();
-$archivo->setNombreArchivo('../../../../../receptionProduct/data/cambio_precio.txt');
-$archivo_cambio_precio = $archivo->leerArchivo();
-$result = array();
-$estado = '';
-$msg = '';
+require_once('../../../../../receptionProduct/ReceptionProduct/src/controlador.php');
+require_once('../../../../../receptionProduct/ReceptionProduct/src/connectwoo.php');
+$msg='';
+$estado = 'success';
 $id_producto = $_POST['id_producto'];
-$id_producto_woo = $_POST['id_producto_woo'];
+$wp_id = $_POST['id_producto_woo'];
 $precio = $_POST['precio'];
 $precio_competencia = $_POST['precio_competencia'];
-if($archivo_cambio_precio){
+$control_market = new Controlador('mongodb');
+$control_market->setDataBaseMongo('wp_market');
+$control_market->setCollection('productos');
+$control_market->conectarMongo();
+$control_mongo = new Controlador('mongodb');
+$control_mongo->setDataBaseMongo('bodega');
+$control_mongo->setCollection('productos_cambio_precios');
+$control_mongo->conectarMongo();
+$cw = new Connectwoo();
+$encuentra = array('wp_id' => $wp_id);
+$result = $control_market->consultar($encuentra);
+$check = false;
+foreach ( $result as $wordpress ){
 	$data = [
 		'regular_price' => $precio_competencia,
 	    'sale_price' => $precio
 	];
-	$cw->setProduct($id_producto_woo,$data);
-	$productos = json_decode($archivo_cambio_precio);
-	$total_productos = count($productos);
-	for($x=0;$x<$total_productos;$x++){
-		if($productos[$x]->productId === $id_producto){
-			array_splice($productos,$x,1);
-			break;
-		}
+	if($cw->setProduct($wp_id,$data)){
+		$actualiza = array('$set'=> $data);
+        $control_market->actualizar($encuentra,$actualiza);
+        $encuentra = array('productId' => $id_producto);
+        $control_mongo->eliminarCollection($encuentra);        
+        $msg = 'producto '.$wordpress->name.' <font size="+1"><strong>actualizado</strong></font>';
 	}
-	$archivo->setContenido(json_encode($productos));
-	$archivo->escribir();
-	$estado = 'success';
-	$msg = 'Precio actualizado';
-}else{
-	$estado = 'error';
-	$msg = 'Error al actualizar.';
 }
-$result['msg'] = $msg;
-$result['estado'] = $estado;
-echo json_encode($result);
+$resultado['msg'] = $msg;
+$resultado['estado'] = $estado;
+echo json_encode($resultado);
 ?>
