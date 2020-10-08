@@ -27,7 +27,7 @@ foreach ( $pn as $producto){
     $imagen_url = array("src"=>str_replace('<SIZE>','400',$producto->info->imageUrl));
 	$msg .= '<tr id="tr_'.$x.'"><td ><img src="'.str_replace('<SIZE>','400',$producto->info->imageUrl).'" width="60px"></td><td>'.$producto->info->productLabel.'<input type="hidden" id="woo_'.$x.'" value="'.$producto->woocomerce_id.'"></td><td><input type="number" id="precio_'.$x.'" name="precio_'.$x.'" value="'.$precio_wpmarket.'"></td><td>
 		<input type="hidden" id="precio_competencia_'.$x.'" name="precio_competencia_'.$x.'" value="'.($producto->storeSku->pricing->specialPrice).'">
-		<input type="hidden" id="id_product_'.$x.'" name="id_product_'.$x.'" value="'.$producto->productId.'">$'.$producto->storeSku->pricing->specialPrice.'</td><td><a href="javascript:void(0);" onclick="actualizar(\''.$x.'\');">Actualizar</a> <a href="javascript:void(0);" onclick="descartarN(\''.$x.'\');">Descartar</a></td></tr>';
+		<input type="hidden" id="id_product_'.$x.'" name="id_product_'.$x.'" value="'.$producto->productId.'">$'.$producto->storeSku->pricing->specialPrice.'</td><td><div id="accion_'.$x.'"><a id="boton_actualizar_'.$x.'" href="javascript:void(0);" onclick="actualizar(\''.$x.'\');">Actualizar</a> <a id="boton_descartar_'.$x.'" href="javascript:void(0);" onclick="descartar(\''.$x.'\');">Descartar</a></div></td></tr>';
 	$x++;
 }
 $msg .= '</tbody><table>';

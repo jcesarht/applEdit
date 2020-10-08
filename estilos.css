@@ -1,0 +1,41 @@
+*{
+    margin:0;
+    padding: 0;
+}
+body{
+    background-color: #f8f8f8  ;
+    font-family: Helvetica;
+    background:  url(img/BG.png) no-repeat;
+
+} 
+
+.contenedor{
+    width: 90%; 
+    max-width: 1250px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+header{
+    
+    margin: 20px 0;
+}
+header h1{
+    color: #ffffff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+/* .main img{
+    width: 100%;   /*  Dinamico 
+    height: auto;    para que la imagen se ajuste 
+} */
+
+@media only screen and (max-width: 767px) {
+
+    body {
+    
+    background-image: url(img/BG.png);
+    
+    }
+
+}

@@ -33,11 +33,12 @@ function consultarCambioPrecios(){
           url:   url,
           type:  'post',
           beforeSend: function () {
-            $("#contenido").html('<center><img src="'+pathName+'img/big_loading.gif" alt="Cargando..."></center>');
+            $("#contenido").html('<center><img src="'+pathName+'img/best.gif" alt="Cargando..."></center>');
             div_alerta.setAttribute('class','');
             div_alerta.setAttribute('role','');
           },
           success: function (response) {
+            console.log(response);
             var consulta = jQuery.parseJSON(response);
             var icono_alerta = '';
             var tipo_msg = '';
@@ -117,12 +118,38 @@ function actualizar(id_element){
             data: param,
             type:  'post',
             beforeSend: function () {
-              tr.innerHTML = '<td colspan="5"><center><img src="'+pathName+'img/big_loading.gif" alt="Cargando..." width="50px"></center></td>';
+              tr.innerHTML = '<td colspan="5"><center><img src="'+pathName+'img/best.gif" alt="Cargando..." width="50px"></center></td>';
+              var check = true;
+              var cont = 0;
+              while(check){
+                if(cont != id_element){
+                  if($("#accion_"+cont).length){
+                    $("#accion_"+cont).hide();
+                  }else{
+                    check = false;
+                    break;
+                  }
+                }
+                cont++
+              }
             },
             success: function (response) {
-              console.log(response);
+              //console.log(response);
               var consulta = jQuery.parseJSON(response);
-              tr.innerHTML = '<td colspan="5"><center>'+consulta.msg+'</center></td>'; 
+              tr.innerHTML = '<td colspan="5"><center>'+consulta.msg+'<div id="accion_'+id_element+'"></div></center></td>';
+              var check = true;
+              var cont = 0;
+              while(check){
+                if(cont != id_element){
+                  if($("#accion_"+cont).length){
+                    $("#accion_"+cont).show();
+                  }else{
+                    check = false;
+                    break;
+                  }
+                }
+                cont++
+              } 
             }
       }).fail( function( jqXHR, textStatus, errorThrown ) { 
           $("#contenido").html(errorAjax( jqXHR, textStatus, errorThrown ));     
@@ -145,11 +172,12 @@ function descartar(id_element){
             data: param,
             type:  'post',
             beforeSend: function () {
-              tr.innerHTML = '<td colspan="5"><center><img src="'+pathName+'img/big_loading.gif" alt="Cargando..." width="50px"></center></td>';
+              tr.innerHTML = '<td colspan="5"><center><img src="'+pathName+'img/best.gif" alt="Cargando..." width="50px"></center></td>';
             },
             success: function (response) {
+              console.log(response);
               var consulta = jQuery.parseJSON(response);
-              tr.innerHTML = '<td colspan="5"><center>'+consulta.msg+'</center></td>'; 
+              tr.innerHTML = '<td colspan="5"><center>'+consulta.msg+'<div id="accion_'+id_element+'"></div></center></td>'; 
             }
       }).fail( function( jqXHR, textStatus, errorThrown ) { 
           $("#contenido").html(errorAjax( jqXHR, textStatus, errorThrown ));     
@@ -166,11 +194,13 @@ function consultarProductosNuevos(){
           url:   url,
           type:  'post',
           beforeSend: function () {
-            $("#contenido").html('<center><img src="'+pathName+'img/big_loading.gif" alt="Cargando..."></center>');
+            document.getElementById('contenido');
+            $("#contenido").html('<center><img src="'+pathName+'img/best.gif" alt="Cargando..."></center>');
             div_alerta.setAttribute('class','');
             div_alerta.setAttribute('role','');
           },
           success: function (response) {
+            console.log(response);
             var consulta = jQuery.parseJSON(response);
             var icono_alerta = '';
             var tipo_msg = '';
@@ -212,11 +242,12 @@ function descartarN(id_element){
             data: param,
             type:  'post',
             beforeSend: function () {
-              tr.innerHTML = '<td colspan="5"><center><img src="'+pathName+'img/big_loading.gif" alt="Cargando..." width="50px"></center></td>';
+              tr.innerHTML = '<td colspan="5"><center><img src="'+pathName+'img/best.gif" alt="Cargando..." width="50px"></center></td>';
             },
             success: function (response) {
+              console.log(response);
               var consulta = jQuery.parseJSON(response);
-              tr.innerHTML = '<td colspan="5"><center>'+consulta.msg+'</center></td>'; 
+              tr.innerHTML = '<td colspan="6"><center>'+consulta.msg+'<div id="accion_'+id_element+'"></div></center></td>'; 
             }
       }).fail( function( jqXHR, textStatus, errorThrown ) { 
           $("#contenido").html(errorAjax( jqXHR, textStatus, errorThrown ));     
@@ -229,10 +260,12 @@ function insertar(id_element){
     var id_product = document.getElementById('id_product_'+id_element);
     var precio = document.getElementById('precio_'+id_element);
     var precio_anterior = document.getElementById('precio_anterior_'+id_element);
+    var cantidad = document.getElementById('cantidad_'+id_element);
     var param = {
       "id_producto": id_product.value,
       "precio": precio.value,
-      "precio_anterior": precio_anterior.value
+      "precio_anterior": precio_anterior.value,
+      "cantidad": cantidad.value
     };
     var tr = document.getElementById("tr_"+id_element);
     if(rqst && rqst.readyState != 4) { 
@@ -243,11 +276,38 @@ function insertar(id_element){
             data: param,
             type:  'post',
             beforeSend: function () {
-              tr.innerHTML = '<td colspan="5"><center><img src="'+pathName+'img/big_loading.gif" alt="Cargando..." width="50px"></center></td>';
+              tr.innerHTML = '<td colspan="6"><center><img src="'+pathName+'img/best.gif" alt="Cargando..." width="50px"></center></td>';
+              var check = true;
+              var cont = 0;
+              while(check){
+                if(cont != id_element){
+                  if($("#accion_"+cont).length){
+                    $("#accion_"+cont).hide();
+                  }else{
+                    check = false;
+                    break;
+                  }
+                }
+                cont++
+              }
             },
             success: function (response) {
+              console.log(response);
               var consulta = jQuery.parseJSON(response);
-              tr.innerHTML = '<td colspan="5"><center>'+consulta.msg+'</center></td>'; 
+              tr.innerHTML = '<td colspan="6"><center>'+consulta.msg+'<div id="accion_'+id_element+'"></div></center></td>'; 
+              var check = true;
+              var cont = 0;
+              while(check){
+                if(cont != id_element){
+                  if($("#accion_"+cont).length){
+                    $("#accion_"+cont).show();
+                  }else{
+                    check = false;
+                    break;
+                  }
+                }
+                cont++
+              }
             }
       }).fail( function( jqXHR, textStatus, errorThrown ) { 
           $("#contenido").html(errorAjax( jqXHR, textStatus, errorThrown ));     

@@ -28,8 +28,19 @@ foreach ( $result as $wordpress ){
 		$actualiza = array('$set'=> $data);
         $control_market->actualizar($encuentra,$actualiza);
         $encuentra = array('productId' => $id_producto);
-        $control_mongo->eliminarCollection($encuentra);        
-        $msg = 'producto '.$wordpress->name.' <font size="+1"><strong>actualizado</strong></font>';
+        $control_mongo->eliminarCollection($encuentra); 
+        $control_mongo->setCollection('productos');
+		$control_mongo->conectarMongo();
+		$data = ['storeSku.pricing.specialPrice' => "".$precio_competencia];
+		$actualiza = array('$set'=> $data);
+		$control_mongo->actualizar($encuentra,$actualiza); 
+		$result2 = $control_mongo->consultar($encuentra);
+        $product_temp = 'xxx';
+        foreach($result2 as $temp){
+            $product_temp = $temp->storeSku->pricing->specialPrice;
+        }
+        $msg = 'producto '.$product_temp.$wordpress->name.' <font size="+1"><strong>actualizado</strong></font>';       
+        //$msg = 'producto '.$wordpress->name.' <font size="+1"><strong>actualizado</strong></font>';
 	}
 }
 $resultado['msg'] = $msg;

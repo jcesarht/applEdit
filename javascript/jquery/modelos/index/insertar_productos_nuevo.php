@@ -17,9 +17,17 @@ $estado = 'error';
 $msg = 'No se agregó el producto';
 $id_producto = $_POST['id_producto'];
 $precio = $_POST['precio'];
-$precio_anterior = $_POST['precio_anterior']; 
+$precio_anterior = $_POST['precio_anterior'];
+$cantidad = $_POST['cantidad']; 
+$habilitar_stock = "false";
+if($cantidad < 0){
+    $habilitar_stock = "false";   
+}else{
+    $habilitar_stock = "true";
+}
 $query = array('productId' => $id_producto);
 $producto_nuevo = $control_mongo->consultar($query);
+
 foreach ( $producto_nuevo as $product){
     $nombre_marca = trim($product->info->brandName);
     $control_wordpress_market->setCollection('marcas');
@@ -38,10 +46,6 @@ foreach ( $producto_nuevo as $product){
         $insertar = [array('brandName' => $nombre_marca,'wp_id' => "".$id_marca)];
         $control_wordpress_market->setDatos($insertar);
         $control_wordpress_market->insertarDatos($insertar);
-    }
-    $precio = $product->storeSku->pricing->originalPrice;
-    if(isset($product->storeSku->pricing->specialPrice)){
-        $precio = $product->storeSku->pricing->specialPrice;
     }
     $topAttributes = $product->info->topAttributes;
     $total_topAttributes = count($topAttributes);
@@ -127,12 +131,14 @@ foreach ( $producto_nuevo as $product){
         'display'=> $product->info->brandName,
         'name' => $nombre_producto,
         'type' => 'simple',
-        'price'=> "".$precio,
-        'regular_price'=> "".$precio,
-        'sale_price'=> "".($precio * 0.85),
+        'price'=> "".$precio_anterior,
+        'regular_price'=> "".$precio_anterior,
+        'sale_price'=> "".($precio),
         'description' => $descripcion,
         'short_description' => $descripcion,
         'sku' => "".$product->info->storeSkuNumber,
+        'manage_stock' => $habilitar_stock,
+        'stock_quantity' => (int)$cantidad,
         'categories' => [
             [
               'id' => $product->categoryID,
@@ -146,11 +152,13 @@ foreach ( $producto_nuevo as $product){
         'display'=> $product->info->brandName,
         'name' => $nombre_producto,
         'type' => 'simple',
-        'price'=> "".$precio,
-        'regular_price'=> "".$precio,
-        'sale_price'=> "".($precio * 0.85),
+        'price'=> "".$precio_anterior,
+        'regular_price'=> "".$precio_anterior,
+        'sale_price'=> "".($precio),
         'description' => $descripcion,
         'short_description' => $descripcion,
+        'manage_stock' => $habilitar_stock,
+        'stock_quantity' => (int)$cantidad,
         'categories' => [
             [
               'id' => $product->categoryID,
@@ -192,7 +200,7 @@ foreach ( $producto_nuevo as $product){
     $estado = 'success';
     $msg = 'Producto <strong>'.$product->info->productLabel.'</strong> <font size="+2"><strong>Agregado</strong></font>';
 }	
-$resultado['msg'] = $msg;
+$resultado['msg'] = $msg."".$habilitar_stock.$cantidad;
 $resultado['estado'] = $estado;
 echo json_encode($resultado);
 ?>

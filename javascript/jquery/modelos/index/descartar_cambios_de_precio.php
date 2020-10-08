@@ -1,28 +1,19 @@
 <?php
-require_once('../../../../../receptionProduct/src/archivos.php');
-$archivo = new ArchivoTm();
-$archivo->setNombreArchivo('../../../../../receptionProduct/data/cambio_precio.txt');
-$archivo_cambio_precio = $archivo->leerArchivo();
-$result = array();
-$estado = '';
-$msg = '';
+require_once('../../../../../receptionProduct/ReceptionProduct/src/controlador.php');
 $id_producto = $_POST['id_producto'];
-if($archivo_cambio_precio){
-	$productos = json_decode($archivo_cambio_precio);
-	$total_productos = count($productos);
-	for($x=0;$x<$total_productos;$x++){
-		if($productos[$x]->productId === $id_producto){
-			array_splice($productos,$x,1);
-			break;
-		}
-	}
-	$archivo->setContenido(json_encode($productos));
-	$archivo->escribir();
-	$estado = 'success';
-	$msg = 'Producto descartado';
-}else{
-	$estado = 'error';
-	$msg = 'Error al descartar';
+$control_mongo = new Controlador('mongodb');
+$estado = 'success';
+$msg = 'Producto descartado.';
+$control_mongo->setDataBaseMongo('bodega');
+$control_mongo->setCollection('productos_cambio_precios');
+$control_mongo->conectarMongo();
+$query = array('productId' => $id_producto);
+$pn = $control_mongo->consultar($query);
+if(!$control_mongo->eliminarCollection($query)){
+	//$msg = 'Probemas al descartar.';
+}
+foreach ( $pn as $producto){
+	//$msg .= $producto->productId;
 }
 $result['msg'] = $msg;
 $result['estado'] = $estado;
